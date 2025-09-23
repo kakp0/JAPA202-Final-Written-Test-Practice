@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanji Study App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="reset-container">
+        <button id="clear-timers-btn" title="Clear All Review Timers">Reset Deck</button>
+    </div>
+
+    <div id="app-container">
+        <div id="mode-switcher">
+            <button id="practice-mode-btn" class="active">Practice Mode</button>
+            <button id="quiz-mode-btn">Quiz Mode</button>
+        </div>
+
+        <div id="practice-container">
+            <h1>Kanji Tracer</h1>
+            <div id="info-display">
+                <span id="kanji-info"></span>
+                <span id="score-info">Score: --%</span>
+            </div>
+            <div id="canvas-container">
+                <canvas id="guideCanvas" width="300" height="300"></canvas>
+                <canvas id="drawingCanvas" width="300" height="300"></canvas>
+            </div>
+            <div id="readings-display">
+                <p><strong>On'yomi:</strong> <span id="on-reading"></span></p>
+                <p><strong>Kun'yomi:</strong> <span id="kun-reading"></span></p>
+                <p><strong>Meaning:</strong> <span id="en-meaning"></span></p>
+            </div>
+            <div id="controls">
+                <button id="grade-button">Grade Drawing</button>
+                <button id="clear-button">Clear</button>
+                <button id="next-button">Next Kanji</button>
+            </div>
+        </div>
+
+        <div id="quiz-container">
+            <h1>Kanji Quiz</h1>
+            <div id="quiz-prompt">
+                <p><strong>On'yomi:</strong> <span id="quiz-on"></span></p>
+                <p><strong>Kun'yomi:</strong> <span id="quiz-kun"></span></p>
+                <p><strong>Meaning:</strong> <span id="quiz-en"></span></p>
+            </div>
+             <div id="no-cards-message" style="display: none;">
+                <h2>All cards are in review! 🎉</h2>
+                <p>Come back later to practice some more.</p>
+            </div>
+            <div id="quiz-canvas-wrapper">
+                <div class="canvas-box">
+                    <h2>Your Answer</h2>
+                    <canvas id="quizUserCanvas" width="250" height="250"></canvas>
+                </div>
+                <div class="canvas-box">
+                    <h2>Correct Answer</h2>
+                    <canvas id="quizAnswerCanvas" width="250" height="250"></canvas>
+                </div>
+            </div>
+            <div id="quiz-controls">
+                <div class="quiz-main-actions">
+                    <button id="quiz-reveal-btn">Reveal Answer</button>
+                    <button id="quiz-clear-btn">Clear Drawing</button>
+                </div>
+                <div id="quiz-rating-buttons">
+                    <button class="rating-btn again" data-time="0">Again (0s)</button>
+                    <button class="rating-btn hard" data-time="300">Hard (5m)</button>
+                    <button class="rating-btn good" data-time="600">Good (10m)</button>
+                    <button class="rating-btn easy" data-time="1800">Easy (30m)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
