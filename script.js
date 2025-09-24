@@ -47,30 +47,104 @@ document.addEventListener('DOMContentLoaded', () => {
         quiz.loadNextQuestion();
     };
 
-    // --- Practice Mode (Unchanged) ---
+    // --- Practice Mode (Now expanded for clarity) ---
     const practice = (() => {
-        const guideCanvas = document.getElementById('guideCanvas'), drawingCanvas = document.getElementById('drawingCanvas'), guideCtx = guideCanvas.getContext('2d'), drawingCtx = drawingCanvas.getContext('2d'), gradeButton = document.getElementById('grade-button'), clearButton = document.getElementById('clear-button'), nextButton = document.getElementById('next-button'), kanjiInfo = document.getElementById('kanji-info'), scoreInfo = document.getElementById('score-info'), onReading = document.getElementById('on-reading'), kunReading = document.getElementById('kun-reading'), enMeaning = document.getElementById('en-meaning');
-        let currentLessonIndex = 0, currentKanjiInLessonIndex = 0;
-        const loadKanji = () => { clearDrawingCanvas(); guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height); scoreInfo.textContent = 'Score: --%'; const lesson = lessons[currentLessonIndex], kanjiData = lesson.kanji[currentKanjiInLessonIndex]; guideCtx.fillStyle = 'rgba(0, 0, 0, 0.1)'; guideCtx.font = '200px "Yu Gothic", "Meiryo", sans-serif'; guideCtx.textAlign = 'center'; guideCtx.textBaseline = 'middle'; guideCtx.fillText(kanjiData.char, guideCanvas.width / 2, guideCanvas.height / 2); kanjiInfo.textContent = `${lesson.name}: ${kanjiData.char}`; onReading.textContent = kanjiData.on; kunReading.textContent = kanjiData.kun; enMeaning.textContent = kanjiData.en; };
+        const guideCanvas = document.getElementById('guideCanvas');
+        const drawingCanvas = document.getElementById('drawingCanvas');
+        const guideCtx = guideCanvas.getContext('2d');
+        const drawingCtx = drawingCanvas.getContext('2d');
+        const gradeButton = document.getElementById('grade-button');
+        const clearButton = document.getElementById('clear-button');
+        const nextButton = document.getElementById('next-button');
+        const kanjiInfo = document.getElementById('kanji-info');
+        const scoreInfo = document.getElementById('score-info');
+        const onReading = document.getElementById('on-reading');
+        const kunReading = document.getElementById('kun-reading');
+        const enMeaning = document.getElementById('en-meaning');
+        
+        let currentLessonIndex = 0;
+        let currentKanjiInLessonIndex = 0;
+
+        const loadKanji = () => {
+            clearDrawingCanvas();
+            guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
+            scoreInfo.textContent = 'Score: --%';
+            const lesson = lessons[currentLessonIndex];
+            const kanjiData = lesson.kanji[currentKanjiInLessonIndex];
+            guideCtx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            guideCtx.font = '200px "Yu Gothic", "Meiryo", sans-serif';
+            guideCtx.textAlign = 'center';
+            guideCtx.textBaseline = 'middle';
+            guideCtx.fillText(kanjiData.char, guideCanvas.width / 2, guideCanvas.height / 2);
+            kanjiInfo.textContent = `${lesson.name}: ${kanjiData.char}`;
+            onReading.textContent = kanjiData.on;
+            kunReading.textContent = kanjiData.kun;
+            enMeaning.textContent = kanjiData.en;
+        };
+
         const clearDrawingCanvas = () => drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
-        const nextKanji = () => { currentKanjiInLessonIndex++; if (currentKanjiInLessonIndex >= lessons[currentLessonIndex].kanji.length) { currentKanjiInLessonIndex = 0; currentLessonIndex = (currentLessonIndex + 1) % lessons.length; } loadKanji(); };
-        const gradeDrawing = () => { const guideData = guideCtx.getImageData(0, 0, guideCanvas.width, guideCanvas.height).data, drawingData = drawingCtx.getImageData(0, 0, drawingCanvas.width, drawingCanvas.height).data; let templatePixels = 0, userPixels = 0, correctPixels = 0; for (let i = 0; i < guideData.length; i += 4) { const isGuidePixel = guideData[i + 3] > 0, isDrawingPixel = drawingData[i + 3] > 0; if (isGuidePixel) templatePixels++; if (isDrawingPixel) userPixels++; if (isGuidePixel && isDrawingPixel) correctPixels++; } if (templatePixels === 0) { scoreInfo.textContent = 'Score: 0%'; return; } const incorrectPixels = userPixels - correctPixels, score = (correctPixels / (templatePixels + (incorrectPixels * 0.5))) * 100; scoreInfo.textContent = `Score: ${Math.round(score)}%`; };
-        return { init: () => { drawingCtx.strokeStyle = '#000'; drawingCtx.lineWidth = 10; drawingCtx.lineCap = 'round'; drawingCtx.lineJoin = 'round'; const draw = createDrawFunction(drawingCanvas, drawingCtx); drawingCanvas.addEventListener('mousedown', startDrawing); drawingCanvas.addEventListener('mousemove', draw); drawingCanvas.addEventListener('mouseup', stopDrawing); drawingCanvas.addEventListener('mouseout', stopDrawing); drawingCanvas.addEventListener('touchstart', startDrawing); drawingCanvas.addEventListener('touchmove', draw); drawingCanvas.addEventListener('touchend', stopDrawing); gradeButton.addEventListener('click', gradeDrawing); clearButton.addEventListener('click', clearDrawingCanvas); nextButton.addEventListener('click', nextKanji); loadKanji(); } };
+
+        const nextKanji = () => {
+            currentKanjiInLessonIndex++;
+            if (currentKanjiInLessonIndex >= lessons[currentLessonIndex].kanji.length) {
+                currentKanjiInLessonIndex = 0;
+                currentLessonIndex = (currentLessonIndex + 1) % lessons.length;
+            }
+            loadKanji();
+        };
+
+        const gradeDrawing = () => {
+            const guideData = guideCtx.getImageData(0, 0, guideCanvas.width, guideCanvas.height).data;
+            const drawingData = drawingCtx.getImageData(0, 0, drawingCanvas.width, drawingCanvas.height).data;
+            let templatePixels = 0, userPixels = 0, correctPixels = 0;
+            for (let i = 0; i < guideData.length; i += 4) {
+                const isGuidePixel = guideData[i + 3] > 0;
+                const isDrawingPixel = drawingData[i + 3] > 0;
+                if (isGuidePixel) templatePixels++;
+                if (isDrawingPixel) userPixels++;
+                if (isGuidePixel && isDrawingPixel) correctPixels++;
+            }
+            if (templatePixels === 0) { scoreInfo.textContent = 'Score: 0%'; return; }
+            const incorrectPixels = userPixels - correctPixels;
+            const score = (correctPixels / (templatePixels + (incorrectPixels * 0.5))) * 100;
+            scoreInfo.textContent = `Score: ${Math.round(score)}%`;
+        };
+        
+        return {
+            init: () => {
+                drawingCtx.strokeStyle = '#000';
+                drawingCtx.lineWidth = 10;
+                drawingCtx.lineCap = 'round';
+                drawingCtx.lineJoin = 'round';
+                const draw = createDrawFunction(drawingCanvas, drawingCtx);
+                drawingCanvas.addEventListener('mousedown', startDrawing);
+                drawingCanvas.addEventListener('mousemove', draw);
+                drawingCanvas.addEventListener('mouseup', stopDrawing);
+                drawingCanvas.addEventListener('mouseout', stopDrawing);
+                drawingCanvas.addEventListener('touchstart', startDrawing);
+                drawingCanvas.addEventListener('touchmove', draw);
+                drawingCanvas.addEventListener('touchend', stopDrawing);
+                gradeButton.addEventListener('click', gradeDrawing);
+                clearButton.addEventListener('click', clearDrawingCanvas);
+                nextButton.addEventListener('click', nextKanji);
+                loadKanji();
+            }
+        };
     })();
 
-    // --- Quiz Mode (Major SRS Update) ---
+    // --- Quiz Mode (Error Fixes Applied) ---
     const quiz = (() => {
+        // DOM Elements
         const userCanvas = document.getElementById('quizUserCanvas'), answerCanvas = document.getElementById('quizAnswerCanvas'), userCtx = userCanvas.getContext('2d'), answerCtx = answerCanvas.getContext('2d'), revealBtn = document.getElementById('quiz-reveal-btn'), clearBtn = document.getElementById('quiz-clear-btn'), onDisplay = document.getElementById('quiz-on'), kunDisplay = document.getElementById('quiz-kun'), enDisplay = document.getElementById('quiz-en'), ratingButtons = document.getElementById('quiz-rating-buttons'), noCardsMessage = document.getElementById('no-cards-message'), quizUI = document.getElementById('quiz-canvas-wrapper'), mainActions = document.querySelector('.quiz-main-actions'), prompt = document.getElementById('quiz-prompt');
+        
+        // State
         let currentKanji = null;
         
+        // --- Core Functions ---
         const getDeckState = () => {
             let state = JSON.parse(localStorage.getItem(DECK_STATE_KEY));
-            if (!state) {
-                state = {
-                    unseen: allKanji.map(k => k.char),
-                    learning: [],
-                    review: {}
-                };
+            if (!state || !state.unseen || !state.learning || !state.review) {
+                state = { unseen: allKanji.map(k => k.char), learning: [], review: {} };
             }
             while (state.learning.length < LEARNING_BUFFER_SIZE && state.unseen.length > 0) {
                 state.learning.push(state.unseen.shift());
@@ -78,32 +152,25 @@ document.addEventListener('DOMContentLoaded', () => {
             return state;
         };
         
-        const saveDeckState = (state) => {
-            localStorage.setItem(DECK_STATE_KEY, JSON.stringify(state));
-        };
+        const saveDeckState = (state) => localStorage.setItem(DECK_STATE_KEY, JSON.stringify(state));
+        
+        // FIX: This function is now defined inside the module scope, making it accessible to all other functions within this module.
+        const clearUserCanvas = () => userCtx.clearRect(0, 0, userCanvas.width, userCanvas.height);
 
         const handleRating = (e) => {
-            if (!e.target.classList.contains('rating-btn')) return;
+            if (!e.target.classList.contains('rating-btn') || !currentKanji) return; // Safety check
             const timeInSeconds = parseInt(e.target.dataset.time, 10);
             let state = getDeckState();
-
-            // Find and remove current kanji from learning list
             const kanjiChar = currentKanji.char;
             const indexInLearning = state.learning.indexOf(kanjiChar);
-            if (indexInLearning > -1) {
-                state.learning.splice(indexInLearning, 1);
-            }
+
+            if (indexInLearning > -1) state.learning.splice(indexInLearning, 1);
             
             if (timeInSeconds > 0) {
-                // Graduate to review
                 const snoozeUntil = Date.now() + timeInSeconds * 1000;
                 state.review[kanjiChar] = snoozeUntil;
-                // Add a new card to learning if available
-                if (state.unseen.length > 0) {
-                    state.learning.push(state.unseen.shift());
-                }
+                if (state.unseen.length > 0) state.learning.push(state.unseen.shift());
             } else {
-                // Re-add to the end of the learning queue if failed
                 state.learning.push(kanjiChar);
             }
             
@@ -112,6 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const revealAnswer = () => {
+            if (!currentKanji) return; // Safety check for the TypeError
             answerCtx.clearRect(0, 0, answerCanvas.width, answerCanvas.height);
             answerCtx.fillStyle = '#000';
             answerCtx.font = '170px "Yu Gothic", "Meiryo", sans-serif';
@@ -123,16 +191,15 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const loadNextQuestion = () => {
-            clearUserCanvas();
+            clearUserCanvas(); // Now calls the correctly scoped function
             answerCtx.clearRect(0, 0, answerCanvas.width, answerCanvas.height);
             let state = getDeckState();
             
-            // Check for due review cards
             const now = Date.now();
             const dueChars = Object.keys(state.review).filter(char => state.review[char] <= now);
             if (dueChars.length > 0) {
                 for (const char of dueChars) {
-                    state.learning.unshift(char); // Add to front of learning queue
+                    state.learning.unshift(char);
                     delete state.review[char];
                 }
             }
@@ -141,13 +208,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (state.learning.length === 0) {
                 quizUI.style.display = 'none'; mainActions.style.display = 'none'; ratingButtons.style.display = 'none'; prompt.style.display = 'none';
                 noCardsMessage.style.display = 'block';
+                currentKanji = null; // Ensure currentKanji is cleared
                 return;
             }
 
             quizUI.style.display = 'flex'; mainActions.style.display = 'flex'; prompt.style.display = 'block';
             noCardsMessage.style.display = 'none';
             
-            // Prioritize due cards at the front, otherwise pick randomly from learning
             const nextKanjiChar = state.learning[0];
             currentKanji = allKanji.find(k => k.char === nextKanjiChar);
             
@@ -165,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const draw = createDrawFunction(userCanvas, userCtx);
                 userCanvas.addEventListener('mousedown', startDrawing); userCanvas.addEventListener('mousemove', draw); userCanvas.addEventListener('mouseup', stopDrawing); userCanvas.addEventListener('mouseout', stopDrawing); userCanvas.addEventListener('touchstart', startDrawing); userCanvas.addEventListener('touchmove', draw); userCanvas.addEventListener('touchend', stopDrawing);
                 revealBtn.addEventListener('click', revealAnswer);
-                clearBtn.addEventListener('click', clearUserCanvas);
+                clearBtn.addEventListener('click', clearUserCanvas); // Now has access to the function
                 ratingButtons.addEventListener('click', handleRating);
             },
             loadNextQuestion
@@ -188,5 +255,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     practice.init();
     quiz.init();
-    switchToPracticeMode(); // Start in practice mode by default
+    switchToPracticeMode();
 });
