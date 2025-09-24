@@ -11,7 +11,6 @@ body {
     color: #333;
 }
 
-/* NEW: Container for reset button */
 .reset-container {
     margin-bottom: 1rem;
 }
@@ -26,7 +25,6 @@ body {
     max-width: 600px;
 }
 
-/* UPDATED: Reset button style is no longer absolutely positioned */
 #clear-timers-btn {
     background-color: #f8f9fa;
     color: #6c757d;
@@ -86,3 +84,13 @@ button:disabled { background-color: #ced4da; cursor: not-allowed; }
 .rating-btn.easy { background-color: #0d6efd; }
 .rating-btn:hover { filter: brightness(1.1); }
 #no-cards-message { padding: 2rem; background-color: #e9ecef; border-radius: 8px; margin-top: 1.5rem; }
+
+/* NEW: Style for version number */
+#version-number {
+    position: fixed;
+    bottom: 8px;
+    left: 8px;
+    font-size: 0.75rem;
+    color: #cccccc;
+    font-family: monospace;
+}
