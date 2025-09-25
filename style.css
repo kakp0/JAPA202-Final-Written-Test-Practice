@@ -57,7 +57,7 @@ button:disabled { background-color: #ced4da; cursor: not-allowed; }
 .rating-btn:hover { filter: brightness(1.1); }
 #no-cards-message { padding: 2rem; background-color: #e9ecef; border-radius: 8px; margin-top: 1.5rem; }
 
-/* --- NEW: Reading Quiz Styles --- */
+/* --- Reading Quiz Styles --- */
 #reading-quiz-container { display: none; }
 .hard-mode-toggle { margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; color: #495057; }
 #hard-mode-checkbox { width: 16px; height: 16px; }
