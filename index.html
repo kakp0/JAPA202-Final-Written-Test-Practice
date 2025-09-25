@@ -7,9 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="reset-container">
-        <button id="clear-timers-btn" title="Clear All Review Timers">Reset Deck</button>
-    </div>
+    <!-- Reset button is now inside the modal below -->
 
     <div id="app-container">
         <div id="mode-switcher">
@@ -70,9 +68,10 @@
                 </div>
             </div>
             <div id="quiz-controls">
+                <!-- UPDATED: Button order is swapped -->
                 <div class="quiz-main-actions">
-                    <button id="quiz-reveal-btn">Reveal Answer</button>
                     <button id="quiz-clear-btn">Clear Drawing</button>
+                    <button id="quiz-reveal-btn">Reveal Answer</button>
                 </div>
                 <div id="quiz-rating-buttons">
                     <button class="rating-btn again" data-time="0">Again (0s)</button>
@@ -99,6 +98,8 @@
                             <ul id="unseen-list"></ul>
                         </div>
                     </div>
+                    <!-- UPDATED: Reset button moved here -->
+                    <button id="clear-timers-btn" title="Clear All Review Timers">Reset Deck</button>
                 </div>
             </div>
         </div>
@@ -123,7 +124,7 @@
         </div>
     </div>
     <script src="script.js"></script>
-    <div id="version-number">v1.8.0</div>
+    <div id="version-number">v1.9.0</div>
 </body>
 </html>
 
