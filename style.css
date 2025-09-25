@@ -11,7 +11,6 @@ body {
     color: #333;
 }
 
-/* DELETED: .reset-container styles are no longer needed */
 #app-container { background-color: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 600px; }
 
 h1 { margin-top: 0; color: #1a1a1a; }
@@ -46,9 +45,8 @@ canvas { border: 2px solid #ddd; border-radius: 8px; touch-action: none; }
 #drawingCanvas { z-index: 10; background-color: transparent; }
 #quizUserCanvas, #quizAnswerCanvas { background-color: #fff; }
 
-/* UPDATED: Increased top margin for more space */
-#readings-display, #quiz-prompt { margin: 2rem auto 0 auto; text-align: left; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem 1.5rem; box-sizing: border-box; }
-#quiz-prompt { margin-top: 0; } /* Reset for quiz mode */
+#readings-display { margin: 2rem auto 0 auto; text-align: left; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem 1.5rem; box-sizing: border-box; }
+#quiz-prompt { margin-top: 0; text-align: left; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem 1.5rem; box-sizing: border-box; }
 
 #readings-display p, #quiz-prompt p { margin: 0.5rem 0; color: #495057; font-size: 0.95rem; }
 #readings-display strong, #quiz-prompt strong { color: #212529; min-width: 80px; display: inline-block; }
@@ -97,7 +95,6 @@ button:disabled { background-color: #ced4da; cursor: not-allowed; }
 .status-column ul { list-style: none; padding: 0; margin: 0; max-height: 250px; overflow-y: auto; }
 .status-column li { background-color: #f8f9fa; padding: 8px; border-radius: 6px; margin-bottom: 5px; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
 .status-column li .timer { font-size: 0.9rem; font-family: monospace; color: #6c757d; background-color: #e9ecef; padding: 2px 5px; border-radius: 4px; }
-/* NEW: Reset button style inside modal */
 #clear-timers-btn {
     display: block;
     margin: 20px auto 0 auto;
@@ -114,4 +111,52 @@ button:disabled { background-color: #ced4da; cursor: not-allowed; }
 }
 
 #version-number { position: fixed; bottom: 8px; left: 8px; font-size: 0.75rem; color: #cccccc; font-family: monospace; }
+
+/* UPDATED: Media Query for mobile responsiveness */
+@media (max-width: 640px) {
+    #app-container {
+        padding: 1.5rem 1rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+    
+    .practice-header, .quiz-header {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    #mode-switcher button {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    /* Stack canvases in drawing quiz */
+    #quiz-canvas-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    /* Stack multiple choice buttons in reading quiz */
+    #reading-q-answer-area {
+        grid-template-columns: 1fr;
+    }
+
+    /* Adjust modal for better mobile viewing */
+    .modal-content {
+        width: 90%;
+        margin: 15% auto;
+        padding: 15px;
+    }
+    
+    /* Allow rating buttons to wrap nicely */
+    #quiz-rating-buttons {
+        flex-wrap: wrap;
+    }
+
+    .rating-btn {
+        flex-basis: 45%;
+    }
+}
 
