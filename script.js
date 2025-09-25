@@ -33,13 +33,74 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Practice Mode ---
     const practice = (() => {
-        const guideCanvas = document.getElementById('guideCanvas'), drawingCanvas = document.getElementById('drawingCanvas'), guideCtx = guideCanvas.getContext('2d'), drawingCtx = drawingCanvas.getContext('2d'), gradeButton = document.getElementById('grade-button'), clearButton = document.getElementById('clear-button'), nextButton = document.getElementById('next-button'), kanjiInfo = document.getElementById('kanji-info'), scoreInfo = document.getElementById('score-info'), onReading = document.getElementById('on-reading'), kunReading = document.getElementById('kun-reading'), enMeaning = document.getElementById('en-meaning');
-        let currentLessonIndex = 0, currentKanjiInLessonIndex = 0;
-        const loadKanji = () => { clearDrawingCanvas(); guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height); scoreInfo.textContent = 'Score: --%'; const lesson = lessons[currentLessonIndex], kanjiData = lesson.kanji[currentKanjiInLessonIndex]; guideCtx.fillStyle = 'rgba(0, 0, 0, 0.1)'; guideCtx.font = '200px "Yu Gothic", "Meiryo", sans-serif'; guideCtx.textAlign = 'center'; guideCtx.textBaseline = 'middle'; guideCtx.fillText(kanjiData.char, guideCanvas.width / 2, guideCanvas.height / 2); kanjiInfo.textContent = `${lesson.name}: ${kanjiData.char}`; onReading.textContent = kanjiData.on; kunReading.textContent = kanjiData.kun; enMeaning.textContent = kanjiData.en; };
+        const guideCanvas = document.getElementById('guideCanvas'), drawingCanvas = document.getElementById('drawingCanvas'), guideCtx = guideCanvas.getContext('2d'), drawingCtx = drawingCanvas.getContext('2d'), gradeButton = document.getElementById('grade-button'), clearButton = document.getElementById('clear-button'), nextButton = document.getElementById('next-button'), kanjiInfo = document.getElementById('kanji-info'), scoreInfo = document.getElementById('score-info'), onReading = document.getElementById('on-reading'), kunReading = document.getElementById('kun-reading'), enMeaning = document.getElementById('en-meaning'), kanjiSelect = document.getElementById('kanji-select');
+        
+        let currentLessonIndex = 0;
+        let currentKanjiInLessonIndex = 0;
+        
+        const populateKanjiSelect = () => {
+            lessons.forEach((lesson, lessonIndex) => {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = lesson.name;
+                lesson.kanji.forEach((kanji, kanjiIndex) => {
+                    const option = document.createElement('option');
+                    option.value = `${lessonIndex}-${kanjiIndex}`;
+                    option.textContent = kanji.char;
+                    optgroup.appendChild(option);
+                });
+                kanjiSelect.appendChild(optgroup);
+            });
+        };
+
+        const loadKanji = () => { 
+            clearDrawingCanvas(); 
+            guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height); 
+            scoreInfo.textContent = 'Score: --%'; 
+            const lesson = lessons[currentLessonIndex];
+            const kanjiData = lesson.kanji[currentKanjiInLessonIndex];
+            guideCtx.fillStyle = 'rgba(0, 0, 0, 0.1)'; 
+            guideCtx.font = '200px "Yu Gothic", "Meiryo", sans-serif'; 
+            guideCtx.textAlign = 'center'; 
+            guideCtx.textBaseline = 'middle'; 
+            guideCtx.fillText(kanjiData.char, guideCanvas.width / 2, guideCanvas.height / 2); 
+            kanjiInfo.textContent = `${lesson.name}: ${kanjiData.char}`; 
+            onReading.textContent = kanjiData.on; 
+            kunReading.textContent = kanjiData.kun; 
+            enMeaning.textContent = kanjiData.en; 
+            kanjiSelect.value = `${currentLessonIndex}-${currentKanjiInLessonIndex}`;
+        };
+
+        const handleSelectChange = (e) => {
+            const [lessonIdx, kanjiIdx] = e.target.value.split('-').map(Number);
+            currentLessonIndex = lessonIdx;
+            currentKanjiInLessonIndex = kanjiIdx;
+            loadKanji();
+        };
+
         const clearDrawingCanvas = () => drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
-        const nextKanji = () => { currentKanjiInLessonIndex++; if (currentKanjiInLessonIndex >= lessons[currentLessonIndex].kanji.length) { currentKanjiInLessonIndex = 0; currentLessonIndex = (currentLessonIndex + 1) % lessons.length; } loadKanji(); };
+        const nextKanji = () => { 
+            currentKanjiInLessonIndex++; 
+            if (currentKanjiInLessonIndex >= lessons[currentLessonIndex].kanji.length) { 
+                currentKanjiInLessonIndex = 0; 
+                currentLessonIndex = (currentLessonIndex + 1) % lessons.length; 
+            } 
+            loadKanji(); 
+        };
         const gradeDrawing = () => { const guideData = guideCtx.getImageData(0, 0, guideCanvas.width, guideCanvas.height).data, drawingData = drawingCtx.getImageData(0, 0, drawingCanvas.width, drawingCanvas.height).data; let templatePixels = 0, userPixels = 0, correctPixels = 0; for (let i = 0; i < guideData.length; i += 4) { const isGuidePixel = guideData[i + 3] > 0, isDrawingPixel = drawingData[i + 3] > 0; if (isGuidePixel) templatePixels++; if (isDrawingPixel) userPixels++; if (isGuidePixel && isDrawingPixel) correctPixels++; } if (templatePixels === 0) { scoreInfo.textContent = 'Score: 0%'; return; } const incorrectPixels = userPixels - correctPixels, score = (correctPixels / (templatePixels + (incorrectPixels * 0.5))) * 100; scoreInfo.textContent = `Score: ${Math.round(score)}%`; };
-        return { init: () => { drawingCtx.strokeStyle = '#000'; drawingCtx.lineWidth = 10; drawingCtx.lineCap = 'round'; drawingCtx.lineJoin = 'round'; const draw = createDrawFunction(drawingCanvas, drawingCtx); drawingCanvas.addEventListener('mousedown', startDrawing); drawingCanvas.addEventListener('mousemove', draw); drawingCanvas.addEventListener('mouseup', stopDrawing); drawingCanvas.addEventListener('mouseout', stopDrawing); drawingCanvas.addEventListener('touchstart', startDrawing); drawingCanvas.addEventListener('touchmove', draw); drawingCanvas.addEventListener('touchend', stopDrawing); gradeButton.addEventListener('click', gradeDrawing); clearButton.addEventListener('click', clearDrawingCanvas); nextButton.addEventListener('click', nextKanji); loadKanji(); } };
+        
+        return { 
+            init: () => { 
+                drawingCtx.strokeStyle = '#000'; drawingCtx.lineWidth = 10; drawingCtx.lineCap = 'round'; drawingCtx.lineJoin = 'round'; 
+                const draw = createDrawFunction(drawingCanvas, drawingCtx); 
+                drawingCanvas.addEventListener('mousedown', startDrawing); drawingCanvas.addEventListener('mousemove', draw); drawingCanvas.addEventListener('mouseup', stopDrawing); drawingCanvas.addEventListener('mouseout', stopDrawing); drawingCanvas.addEventListener('touchstart', startDrawing); drawingCanvas.addEventListener('touchmove', draw); drawingCanvas.addEventListener('touchend', stopDrawing); 
+                gradeButton.addEventListener('click', gradeDrawing); 
+                clearButton.addEventListener('click', clearDrawingCanvas); 
+                nextButton.addEventListener('click', nextKanji); 
+                kanjiSelect.addEventListener('change', handleSelectChange);
+                populateKanjiSelect();
+                loadKanji(); 
+            } 
+        };
     })();
 
     // --- Drawing Quiz Mode ---
