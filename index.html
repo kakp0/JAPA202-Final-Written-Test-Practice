@@ -20,7 +20,10 @@
 
         <!-- Practice Mode Container -->
         <div id="practice-container">
-            <h1>Kanji Tracer</h1>
+            <div class="practice-header">
+                <h1>Kanji Tracer</h1>
+                <select id="kanji-select"></select>
+            </div>
             <div id="info-display">
                 <span id="kanji-info"></span>
                 <span id="score-info">Score: --%</span>
@@ -78,7 +81,6 @@
                     <button class="rating-btn easy" data-time="1800">Easy (30m)</button>
                 </div>
             </div>
-            <!-- NEW: Status Modal -->
             <div id="status-modal" class="modal">
                 <div class="modal-content">
                     <span class="modal-close">&times;</span>
@@ -121,7 +123,7 @@
         </div>
     </div>
     <script src="script.js"></script>
-    <div id="version-number">v1.7.0</div>
+    <div id="version-number">v1.8.0</div>
 </body>
 </html>
 
