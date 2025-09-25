@@ -18,6 +18,7 @@ body {
 
 h1 { margin-top: 0; color: #1a1a1a; }
 h2 { font-size: 1rem; color: #6c757d; margin: 0 0 0.5rem 0; }
+h3 { font-size: 1rem; margin-bottom: 0.5rem; color: #495057; border-bottom: 2px solid #e9ecef; padding-bottom: 0.5rem; }
 
 #mode-switcher { display: flex; justify-content: center; margin-bottom: 2rem; background-color: #e9ecef; border-radius: 8px; padding: 5px; }
 #mode-switcher button { flex: 1; padding: 0.5rem 1rem; border: none; background-color: transparent; color: #495057; font-weight: 600; cursor: pointer; border-radius: 6px; transition: all 0.2s ease; }
@@ -25,6 +26,9 @@ h2 { font-size: 1rem; color: #6c757d; margin: 0 0 0.5rem 0; }
 
 /* --- Practice & Drawing Quiz --- */
 #practice-container, #drawing-quiz-container { display: none; }
+.quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.quiz-header h1 { margin: 0; }
+#deck-status-btn { padding: 0.4rem 0.8rem; font-size: 0.8rem; background-color: #6c757d; }
 #info-display { display: flex; justify-content: space-between; margin-bottom: 1rem; font-size: 1.1rem; font-weight: 500; }
 #canvas-container { position: relative; width: 300px; height: 300px; margin: 0 auto; }
 canvas { border: 2px solid #ddd; border-radius: 8px; touch-action: none; }
@@ -32,7 +36,7 @@ canvas { border: 2px solid #ddd; border-radius: 8px; touch-action: none; }
 #drawingCanvas, #quizUserCanvas { cursor: crosshair; }
 #drawingCanvas { z-index: 10; background-color: transparent; }
 #quizUserCanvas, #quizAnswerCanvas { background-color: #fff; }
-#readings-display, #quiz-prompt { margin: 1.5rem auto 0 auto; text-align: left; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem 1.5rem; box-sizing: border-box; }
+#readings-display, #quiz-prompt { margin-top: 0; text-align: left; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem 1.5rem; box-sizing: border-box; }
 #readings-display p, #quiz-prompt p { margin: 0.5rem 0; color: #495057; font-size: 0.95rem; }
 #readings-display strong, #quiz-prompt strong { color: #212529; min-width: 80px; display: inline-block; }
 #controls { margin-top: 1.5rem; display: flex; justify-content: center; gap: 1rem; }
@@ -71,4 +75,15 @@ button:disabled { background-color: #ced4da; cursor: not-allowed; }
 .correct-feedback { color: #28a745; }
 .incorrect-feedback { color: #dc3545; }
 
+/* --- NEW: Modal Styles --- */
+.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); }
+.modal-content { background-color: #fefefe; margin: 10% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 700px; border-radius: 12px; position: relative; }
+.modal-close { color: #aaa; position: absolute; top: 10px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer; }
+.modal-close:hover, .modal-close:focus { color: black; }
+.status-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; }
+.status-column ul { list-style: none; padding: 0; margin: 0; max-height: 250px; overflow-y: auto; }
+.status-column li { background-color: #f8f9fa; padding: 8px; border-radius: 6px; margin-bottom: 5px; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
+.status-column li .timer { font-size: 0.9rem; font-family: monospace; color: #6c757d; background-color: #e9ecef; padding: 2px 5px; border-radius: 4px; }
+
 #version-number { position: fixed; bottom: 8px; left: 8px; font-size: 0.75rem; color: #cccccc; font-family: monospace; }
+
