@@ -14,7 +14,8 @@
     <div id="app-container">
         <div id="mode-switcher">
             <button id="practice-mode-btn" class="active">Practice Mode</button>
-            <button id="quiz-mode-btn">Quiz Mode</button>
+            <button id="drawing-quiz-btn">Drawing Quiz</button>
+            <button id="reading-quiz-btn">Reading Quiz</button>
         </div>
 
         <div id="practice-container">
@@ -39,8 +40,8 @@
             </div>
         </div>
 
-        <div id="quiz-container">
-            <h1>Kanji Quiz</h1>
+        <div id="drawing-quiz-container">
+            <h1>Drawing Quiz</h1>
             <div id="quiz-prompt">
                 <p><strong>On'yomi:</strong> <span id="quiz-on"></span></p>
                 <p><strong>Kun'yomi:</strong> <span id="quiz-kun"></span></p>
@@ -73,10 +74,26 @@
                 </div>
             </div>
         </div>
+
+        <div id="reading-quiz-container">
+            <h1>Reading Quiz</h1>
+            <div class="hard-mode-toggle">
+                <input type="checkbox" id="hard-mode-checkbox">
+                <label for="hard-mode-checkbox">Hard Mode (Typing)</label>
+            </div>
+            <div id="reading-q-prompt-box">
+                <p id="reading-q-instruction"></p>
+                <h2 id="reading-q-prompt"></h2>
+            </div>
+            <div id="reading-q-answer-area"></div>
+            <div id="reading-q-feedback-area"></div>
+            <div id="reading-q-controls">
+                <button id="reading-q-check-btn">Check</button>
+                <button id="reading-q-next-btn" style="display: none;">Next</button>
+            </div>
+        </div>
     </div>
     <script src="script.js"></script>
-
-    <div id="version-number">v1.5.1</div>
+    <div id="version-number">v1.6.0</div>
 </body>
 </html>
-
